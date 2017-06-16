@@ -35,6 +35,15 @@ class Parser:
 class TSP:
     def __init__(self, archivoInput):
         self.nodos = Parser(archivoInput).getNodos()
+        self.init_distancias()
+
+    def init_distancias(self):
+        n = len(self.nodos)
+        self.distancias = [n*[0] for i in range(n)]
+        for (i, n1) in enumerate(self.nodos):
+            for (j, n2) in enumerate(self.nodos):
+                if i!=j:
+                    self.distancias[i][j] = n1.distancia(n2)
 
     def to_glpk(self, archivoOutput):
         fout = open(archivoOutput, "w")
@@ -65,14 +74,16 @@ class TSP:
             fout.write(str(i) + " ")
         fout.write(str(n) + ":=\n")
 
-        for (i,n1) in enumerate(self.nodos):
+        for i in range(n):
             fout.write(str(i+1) + "                 ")
-            for n2 in self.nodos:
-                if n1!=n2:
-                    fout.write(str(n1.distancia(n2)) + " ")
+            for j in range(n):
+                if i!=j:
+                    fout.write(str(self.distancias[i][j]) + " ")
                 else:
-                    fout.write("." + (" " if i != len(self.nodos) - 1 else " ;"))
+                    fout.write(". ")
+            if i == n-1: fout.write(";")
             fout.write("\n")
+
         # Footer
 
         fout.write("\nend;\n\n")
