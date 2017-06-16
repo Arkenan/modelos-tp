@@ -1,0 +1,21 @@
+# Data Section: TP3 Modelos
+
+data;
+
+# Conjuntos
+
+set VIAJES := 1 2 3 4;
+
+set NODOS := 0 1 2 3 4;
+
+# Matriz de distancias
+
+param DISTANCIAS: 1 2 3 4:=
+1                 . 0 8 18 
+2                 1 . 9 19 
+3                 5 5 . 15 
+4                 10 8 4 . ;
+
+end;
+
+# Suma de distancias internas: C = 18
