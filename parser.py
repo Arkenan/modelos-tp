@@ -37,9 +37,7 @@ class TSP:
         self.nodos = Parser(archivoInput).getNodos()
         self.init_distancias()
         self.distancias_inevitables = sum([n.distanciaInterna() for n in self.nodos])
-        print("Distancia entre nodos:")
-        for row in self.distancias0:
-            print(row)
+
     def init_distancias(self):
         n = len(self.nodos)
         self.distancias = [n*[0] for i in range(n)]
