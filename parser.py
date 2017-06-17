@@ -36,6 +36,7 @@ class TSP:
     def __init__(self, archivoInput):
         self.nodos = Parser(archivoInput).getNodos()
         self.init_distancias()
+        self.distancias_inevitables = sum([n.distanciaInterna() for n in self.nodos])
 
     def init_distancias(self):
         n = len(self.nodos)
@@ -80,7 +81,8 @@ class TSP:
             tourActual.insert(posNodoMin, nodoMin)
             restantes.remove(nodoMin)
         # Devuelvo el tour y su costo total.
-        return (tourActual, sum([self.distancias0[i-1][i] for i in range(len(tourActual))]))
+        return (tourActual, self.distancias_inevitables + \
+            sum([self.distancias0[i-1][i] for i in range(len(tourActual))]))
 
     def to_glpk(self, archivoOutput):
         fout = open(archivoOutput, "w")
@@ -128,6 +130,6 @@ class TSP:
         # Adjunto como comentario la inevitable suma interna de todos los nodos.
 
         fout.write("# Suma de distancias internas: C = " + \
-            str(sum([n.distanciaInterna() for n in self.nodos])) + "\n")
+            str(self.distancias_inevitables) + "\n")
 
         fout.close()
