@@ -37,7 +37,9 @@ class TSP:
         self.nodos = Parser(archivoInput).getNodos()
         self.init_distancias()
         self.distancias_inevitables = sum([n.distanciaInterna() for n in self.nodos])
-
+        print("Distancia entre nodos:")
+        for row in self.distancias0:
+            print(row)
     def init_distancias(self):
         n = len(self.nodos)
         self.distancias = [n*[0] for i in range(n)]
@@ -62,11 +64,12 @@ class TSP:
             for nodoSeleccionado in restantes:
                 # Y tenemos que ver a dónde queda mejor.
                 costoAgregadoMin = float('inf')
-                for posicion in range(len(tourActual)+1):
+                for posicion in range(len(tourActual)):
                     # Si lo inserto en posicion se agregan dos aristas y se va una.
-                    costoAgregado = self.distancias0[nodoSeleccionado][posicion]\
-                        + self.distancias0[posicion-1][nodoSeleccionado]\
-                        - self.distancias0[posicion-1][posicion]
+                    costoAgregado = self.distancias0[nodoSeleccionado][tourActual[posicion]]\
+                        + self.distancias0[tourActual[posicion-1]][nodoSeleccionado]\
+                        - self.distancias0[tourActual[posicion-1]][tourActual[posicion]]
+                    # print ("Costo de añadir nodo " + str(nodoSeleccionado) + " en la posicion " + str(posicion) + ": " + str(costoAgregado))
                     # Comparo a ver si esa posición es la mejor hasta ahora.
                     if costoAgregado < costoAgregadoMin:
                         costoAgregadoMin = costoAgregado
@@ -77,12 +80,12 @@ class TSP:
                     nodoMin = nodoSeleccionado
                     posNodoMin = posMin
             # Ahora que está seleccionado el nodo lo agrego al tour a donde le corresponde.
-            print("se inserta el nodo " + str(nodoMin) + " en la posición " + str(posNodoMin))
+            # print("se inserta el nodo " + str(nodoMin) + " en la posición " + str(posNodoMin) + " con costo agregado " + str(costoNodoMin))
             tourActual.insert(posNodoMin, nodoMin)
             restantes.remove(nodoMin)
         # Devuelvo el tour y su costo total.
         return (tourActual, self.distancias_inevitables + \
-            sum([self.distancias0[i-1][i] for i in range(len(tourActual))]))
+            sum([self.distancias0[tourActual[i-1]][tourActual[i]] for i in range(len(tourActual))]))
 
     def to_glpk(self, archivoOutput):
         fout = open(archivoOutput, "w")
